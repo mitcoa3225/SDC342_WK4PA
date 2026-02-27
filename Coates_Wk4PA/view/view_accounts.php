@@ -14,6 +14,7 @@ $usersRes = UsersDB::getAllUsers();
     <title>Mitchell Coates Wk 4 Performance Assessment</title>
 </head>
 <body>
+    <h1>Mitchell Coates Wk 4 Performance Assessment</h1>
     <h1>View User Accounts</h1>
 
     <p><a href="admin_nav.php">Home</a></p>

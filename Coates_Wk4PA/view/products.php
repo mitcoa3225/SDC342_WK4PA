@@ -11,6 +11,7 @@ Security::requireLevel(2);
     <title>Mitchell Coates Wk 4 Performance Assessment</title>
 </head>
 <body>
+    <h1>Mitchell Coates Wk 4 Performance Assessment</h1>
     <h1>Products</h1>
 
     <p><a href="user_nav.php">Home</a></p>

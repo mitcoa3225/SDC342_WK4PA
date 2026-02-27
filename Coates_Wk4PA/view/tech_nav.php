@@ -11,6 +11,7 @@ Security::requireLevel(3);
     <title>Mitchell Coates Wk 4 Performance Assessment</title>
 </head>
 <body>
+    <h1>Mitchell Coates Wk 4 Performance Assessment</h1>
     <h1>Manage Incidents</h1>
 
     <p>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></p>
