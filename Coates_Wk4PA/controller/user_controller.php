@@ -18,9 +18,9 @@ class UserController {
         return $user;
     }
 
-    //get a User object by id (returns false if not found)
-    public static function getUser($userId) {
-        $queryRes = UsersDB::getUserById($userId);
+    //get a User object by email (returns false if not found)
+    public static function getUser($email) {
+        $queryRes = UsersDB::getUserByEmail($email);
         if ($queryRes) {
             return self::rowToUser($queryRes);
         }
@@ -28,15 +28,16 @@ class UserController {
     }
 
     //function to check login credentials - return the user's level if valid, false otherwise
-    public static function validUser($userId, $password) {
-        $queryRes = UsersDB::getUserById($userId);
+    //login identifier is EMail
+    public static function validUser($email, $password) {
+        $queryRes = UsersDB::getUserByEmail($email);
         if ($queryRes) {
             //process the user row
             $user = self::rowToUser($queryRes);
 
             //database stores plaintext in this assignment
             if ($user->getPassword() === $password) {
-                return $user->getUserLevel();
+                return intval($user->getUserLevel());
             } else {
                 return false;
             }

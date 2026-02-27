@@ -11,32 +11,38 @@ Security::checkHTTPS();
 $login_msg = isset($_SESSION['logout_msg']) ? $_SESSION['logout_msg'] : '';
 unset($_SESSION['logout_msg']);
 
-if (isset($_POST['user_id']) && isset($_POST['pw'])) {
+if (isset($_POST['email']) && isset($_POST['pw'])) {
     //login fields were set
-    $user_level = UserController::validUser($_POST['user_id'], $_POST['pw']);
+    //login identifier is the EMail field in the database
+    $user_level = UserController::validUser($_POST['email'], $_POST['pw']);
 
     if ($user_level !== false) {
         //store login info in the session
-        $userObj = UserController::getUser($_POST['user_id']);
+        $userObj = UserController::getUser($_POST['email']);
 
         $_SESSION['logged_in'] = true;
-        $_SESSION['user_id'] = intval($_POST['user_id']);
-        $_SESSION['user_level'] = strval($user_level);
+        //store the database UserId (still used in some places) and the login email
+        $_SESSION['user_id'] = $userObj ? intval($userObj->getUserId()) : 0;
+        $_SESSION['email'] = strval($_POST['email']);
+        //store as an int-like value for easy comparisons
+        $_SESSION['user_level'] = intval($user_level);
         $_SESSION['user_name'] = $userObj ? ($userObj->getFirstName() . ' ' . $userObj->getLastName()) : '';
 
-        if (strval($user_level) === '1') {
-            header('Location: view/admin_nav.php');
-            exit();
-        } else if (strval($user_level) === '2') {
-            header('Location: view/user_nav.php');
-            exit();
-        } else if (strval($user_level) === '3') {
-            header('Location: view/tech_nav.php');
-            exit();
-        } else {
-            //unexpected user level
-            $login_msg = 'Login failed - invalid user level.';
-            $_SESSION['logged_in'] = false;
+        //send the user to the correct navigation page based on the UserLevel stored in the database
+        switch (intval($user_level)) {
+            case 1:
+                header('Location: view/admin_nav.php');
+                exit();
+            case 2:
+                header('Location: view/user_nav.php');
+                exit();
+            case 3:
+                header('Location: view/tech_nav.php');
+                exit();
+            default:
+                //unexpected user level
+                $login_msg = 'Login failed - invalid user level.';
+                $_SESSION['logged_in'] = false;
         }
     } else {
         $login_msg = 'Login credentials were incorrect.';
@@ -53,7 +59,7 @@ if (isset($_POST['user_id']) && isset($_POST['pw'])) {
     <h2>Mitchell Coates Application Login</h2>
 
     <form method="POST" action="index.php">
-        <h3>User ID: <input type="text" name="user_id"></h3>
+        <h3>User ID (Email): <input type="text" name="email"></h3>
         <h3>Password: <input type="password" name="pw"></h3>
         <input type="submit" value="Login" name="login">
     </form>

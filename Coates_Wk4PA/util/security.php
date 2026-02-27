@@ -15,10 +15,12 @@ class Security {
 
     //perform any needed clean-up for logging out
     public static function logout() {
-        unset($_SESSION); //clear the session info
-        unset($_POST); //clear post info
+        //clear session data and destroy the session so the user must login again
+        session_unset();
+        session_destroy();
 
-        //set a logout message and return to login page
+        //start a new session only to carry a one-time message back to the login page
+        session_start();
         $_SESSION['logout_msg'] = 'Successfully logged out.';
         header('Location: ../index.php');
         exit();
@@ -36,7 +38,7 @@ class Security {
     //require a specific UserLevel (1 = admin, 2 = user, 3 = tech)
     public static function requireLevel($level) {
         self::requireLogin();
-        if (!isset($_SESSION['user_level']) || strval($_SESSION['user_level']) !== strval($level)) {
+        if (!isset($_SESSION['user_level']) || intval($_SESSION['user_level']) !== intval($level)) {
             $_SESSION['logout_msg'] = 'Current login unauthorized for this page.';
             header('Location: ../index.php');
             exit();

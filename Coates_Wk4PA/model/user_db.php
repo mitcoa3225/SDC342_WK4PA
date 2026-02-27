@@ -28,6 +28,26 @@ class UsersDB {
         }
     }
 
+    //function to get a user by their email address
+    public static function getUserByEmail($email) {
+        $db = new Database();
+        $dbConn = $db->getDbConn();
+
+        if ($dbConn) {
+            //basic escaping (guided-practice style - no prepared statements)
+            $email = $dbConn->real_escape_string($email);
+            $query = "SELECT * FROM users WHERE users.EMail = '$email'";
+
+            $result = $dbConn->query($query);
+            if ($result && $result->num_rows > 0) {
+                return $result->fetch_assoc();
+            }
+            return false;
+        }
+
+        return false;
+    }
+
     //function to get all users (for admin view)
     public static function getAllUsers() {
         $db = new Database();
